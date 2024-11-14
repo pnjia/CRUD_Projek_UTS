@@ -72,11 +72,11 @@ app.get("/ligaspanyol", (req, res) => {
 
 app.post("/pemain/:liga", (req, res) => {
   const liga = req.params.liga;
-  const { nama, umur, posisi, NA, KA, status, harga } = req.body;
+  const { nama, umur, posisi, NA, KA, KSI, harga } = req.body;
 
-  const sql = `INSERT INTO ${liga} (nama, umur, posisi, NA, KA, status, harga) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const sql = `INSERT INTO ${liga} (nama, umur, posisi, NA, KA, KSI, harga) VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
-  db.query(sql, [nama, umur, posisi, NA, KA, status, harga], (err, result) => {
+  db.query(sql, [nama, umur, posisi, NA, KA, KSI, harga], (err, result) => {
     if (err) {
       console.log("error: " + err.message);
       return res.status(500).send("Terjadi kesalahan pada server!");
@@ -90,23 +90,19 @@ app.put("/pemain/:liga/:id", (req, res) => {
   const id = req.params.id;
   const liga = req.params.liga;
 
-  const { nama, umur, posisi, NA, KA, status, harga } = req.body;
+  const { nama, umur, posisi, NA, KA, KSI, harga } = req.body;
 
-  const sql = `UPDATE ${liga} SET nama = ?, umur = ?, posisi = ?, NA = ?, KA = ?, status = ?, harga = ? WHERE id = ?`;
-  db.query(
-    sql,
-    [nama, umur, posisi, NA, KA, status, harga, id],
-    (err, result) => {
-      if (err) {
-        console.log("error: " + err.message);
-        return res.status(500).send("Terjadi kesalahan pada server!");
-      } else if (result.affectedRows === 0) {
-        return res.status(404).send("Data tidak ditemukan!");
-      } else {
-        res.send(`Data dari liga ${liga} dengan id ${id} berhasil diupdate!`);
-      }
+  const sql = `UPDATE ${liga} SET nama = ?, umur = ?, posisi = ?, NA = ?, KA = ?, KSI = ?, harga = ? WHERE id = ?`;
+  db.query(sql, [nama, umur, posisi, NA, KA, KSI, harga, id], (err, result) => {
+    if (err) {
+      console.log("error: " + err.message);
+      return res.status(500).send("Terjadi kesalahan pada server!");
+    } else if (result.affectedRows === 0) {
+      return res.status(404).send("Data tidak ditemukan!");
+    } else {
+      res.send(`Data dari liga ${liga} dengan id ${id} berhasil diupdate!`);
     }
-  );
+  });
 });
 
 app.delete("/pemain/:liga/:id", (req, res) => {
